@@ -15,16 +15,9 @@ connectDB();
 const app = express();
 
 // Middleware
+// Middleware
 app.use(helmet());
-app.use(cors({
-  origin: [
-    process.env.CLIENT_URL,
-    'http://localhost:49870',
-    'http://localhost:5000',
-    /\.vercel\.app$/,
-  ],
-  credentials: true,
-}));
+app.use(cors({ origin: '*' }));
 app.use(morgan('dev'));
 app.use(express.json());
 
