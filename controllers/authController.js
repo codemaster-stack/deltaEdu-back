@@ -1,5 +1,7 @@
 const jwt  = require('jsonwebtoken');
 const User = require('../models/User');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
@@ -84,4 +86,104 @@ const getMe = async (req, res, next) => {
   }
 };
 
-module.exports = { login, register, getMe };
+
+// POST /api/v1/auth/forgot-password
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: 'Please provide your email address.' });
+    }
+
+    const user = await User.findOne({ email });
+
+    // Always return success even if email not found — security best practice
+    if (!user) {
+      return res.json({ message: 'If this email exists, a reset link has been sent.' });
+    }
+
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    user.resetPasswordToken   = crypto.createHash('sha256').update(resetToken).digest('hex');
+    user.resetPasswordExpires = Date.now() + 30 * 60 * 1000; // 30 minutes
+    await user.save({ validateBeforeSave: false });
+
+    // Reset URL
+    const resetUrl = `${process.env.CLIENT_URL}pages/reset-password/reset-password.html?token=${resetToken}`;
+
+    // Send email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: `"Delta State MoE" <${process.env.EMAIL_USER}>`,
+      to:   user.email,
+      subject: 'Password Reset — Delta State Education Portal',
+      html: `
+        <div style="font-family:sans-serif;max-width:520px;margin:0 auto">
+          <h2 style="color:#0C1B2E">Reset Your Password</h2>
+          <p>Hello ${user.name},</p>
+          <p>You requested a password reset for your Delta State Education Portal account.</p>
+          <p>Click the button below to reset your password. This link expires in <strong>30 minutes</strong>.</p>
+          <a href="${resetUrl}" style="display:inline-block;margin:20px 0;padding:12px 28px;background:#C9922A;color:#fff;border-radius:8px;text-decoration:none;font-weight:600">
+            Reset Password
+          </a>
+          <p style="color:#999;font-size:13px">If you did not request this, please ignore this email. Your password will not change.</p>
+          <hr style="border:none;border-top:1px solid #eee;margin:20px 0"/>
+          <p style="color:#999;font-size:12px">Delta State Ministry of Education &mdash; Digital Education Portal</p>
+        </div>
+      `,
+    });
+
+    res.json({ message: 'If this email exists, a reset link has been sent.' });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+// POST /api/v1/auth/reset-password
+const resetPassword = async (req, res, next) => {
+  try {
+    const { token, password } = req.body;
+
+    if (!token || !password) {
+      return res.status(400).json({ message: 'Token and new password are required.' });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters.' });
+    }
+
+    // Hash the token to compare with DB
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken:   hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Reset link is invalid or has expired. Please request a new one.' });
+    }
+
+    // Update password and clear reset token
+    user.password             = password;
+    user.resetPasswordToken   = null;
+    user.resetPasswordExpires = null;
+    await user.save();
+
+    res.json({ message: 'Password reset successful. You can now sign in with your new password.' });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { login, register, getMe, forgotPassword, resetPassword };
