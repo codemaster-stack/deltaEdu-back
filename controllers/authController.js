@@ -208,50 +208,33 @@ const forgotPassword = async (req, res) => {
 // ---------------- SEND EMAIL FUNCTION ----------------
 async function sendResetEmail(toEmail, resetLink) {
   try {
-    // Get access token from refresh token
-    const tokenResponse = await axios.post(
-      'https://accounts.zoho.com/oauth/v2/token',
-      qs.stringify({
-        refresh_token: process.env.ZOHO_REFRESH_TOKEN,
-        client_id: process.env.ZOHO_CLIENT_ID,
-        client_secret: process.env.ZOHO_CLIENT_SECRET,
-        grant_type: 'refresh_token'
-      }),
-      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-    );
-
-    const accessToken = tokenResponse.data.access_token;
-
-    // Get your account ID
-    const accountsRes = await axios.get('https://mail.zoho.com/api/accounts', {
-      headers: { Authorization: `Zoho-oauthtoken ${accessToken}` }
+    const transporter = nodemailer.createTransport({
+      host: process.env.MAIL_HOST,
+      port: process.env.MAIL_PORT,
+      secure: false, // TLS
+      auth: {
+        user: process.env.ZOHO_EMAIL,
+        pass: process.env.ZOHO_APP_PASSWORD
+      }
     });
 
-    const accountId = accountsRes.data.data[0].accountId;
+    await transporter.sendMail({
+      from: `"Support" <${process.env.ZOHO_EMAIL}>`,
+      to: toEmail,
+      subject: 'Reset your password',
+      html: `
+        <p>You requested a password reset.</p>
+        <p>Click below to reset your password:</p>
+        <a href="${resetLink}">${resetLink}</a>
+        <p>This link expires in 1 hour.</p>
+      `
+    });
 
-    // Send email
-    await axios.post(
-      `https://mail.zoho.com/api/accounts/${accountId}/messages`,
-      {
-        fromAddress: process.env.ZOHO_EMAIL,
-        toAddress: toEmail,
-        subject: 'Reset your password',
-        content: `<p>Click <a href="${resetLink}">here</a> to reset your password. Link expires in 1 hour.</p>`
-      },
-      {
-        headers: {
-          Authorization: `Zoho-oauthtoken ${accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-
-    console.log(`✅ Reset email sent to ${toEmail}`);
+    console.log(`✅ Email sent to ${toEmail}`);
   } catch (err) {
-    console.error('Error sending email via Zoho API:', err.response?.data || err.message);
+    console.error('❌ SMTP email error:', err);
   }
 }
-
 // ---------------- RESET PASSWORD ----------------
 const resetPassword = async (req, res) => {
   try {
