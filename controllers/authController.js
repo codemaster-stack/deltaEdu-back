@@ -171,8 +171,8 @@ const forgotPassword = async (req, res) => {
 
     // Find user in any collection
     let user = await User.findOne({ email }) ||
-               await Seller.findOne({ email }) ||
-               await Admin.findOne({ email });
+               await Teacher.findOne({ email }) ||
+               await Admission.findOne({ email });
 
     if (!user) {
       // Always return success to avoid revealing accounts
@@ -184,8 +184,8 @@ const forgotPassword = async (req, res) => {
 
     // Determine which collection the user belongs to
     let collection = 'users';
-    if (user.role === 'seller') collection = 'sellers';
-    if (user.role === 'admin') collection = 'admins';
+    if (user.role === 'teacher') collection = 'teachers';
+    if (user.role === 'admission') collection = 'admissions';
 
     await mongoose.connection.collection(collection).updateOne(
       { _id: user._id },
@@ -257,12 +257,12 @@ const resetPassword = async (req, res) => {
     const now = new Date();
 
     // Find user in all collections
-    let sellerDoc = await mongoose.connection.collection('sellers').findOne({ resetToken: token, resetTokenExpiry: { $gt: now } });
+    let teacherDoc = await mongoose.connection.collection('teachers').findOne({ resetToken: token, resetTokenExpiry: { $gt: now } });
     let userDoc = await mongoose.connection.collection('users').findOne({ resetToken: token, resetTokenExpiry: { $gt: now } });
-    let adminDoc = await mongoose.connection.collection('admins').findOne({ resetToken: token, resetTokenExpiry: { $gt: now } });
+    let admissionDoc = await mongoose.connection.collection('admissions').findOne({ resetToken: token, resetTokenExpiry: { $gt: now } });
 
-    let collection = sellerDoc ? 'sellers' : userDoc ? 'users' : adminDoc ? 'admins' : null;
-    let doc = sellerDoc || userDoc || adminDoc;
+    let collection = teacherDoc ? 'teachers' : userDoc ? 'users' : admissionDoc ? 'admissions' : null;
+    let doc = teacherDoc || userDoc || admissionDoc;
 
     if (!doc) return res.status(400).json({ success: false, message: 'Invalid or expired token' });
 
