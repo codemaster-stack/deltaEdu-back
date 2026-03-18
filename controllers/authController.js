@@ -209,9 +209,9 @@ const forgotPassword = async (req, res) => {
 async function sendResetEmail(toEmail, resetLink) {
   try {
     const transporter = nodemailer.createTransport({
-      host: process.env.MAIL_HOST,
-      port: process.env.MAIL_PORT,
-      secure: false, // TLS
+      host: "smtp.zoho.com",
+      port: 465,        // ✅ MUST be 465
+      secure: true,     // ✅ MUST be true
       auth: {
         user: process.env.ZOHO_EMAIL,
         pass: process.env.ZOHO_APP_PASSWORD
@@ -222,17 +222,12 @@ async function sendResetEmail(toEmail, resetLink) {
       from: `"Support" <${process.env.ZOHO_EMAIL}>`,
       to: toEmail,
       subject: 'Reset your password',
-      html: `
-        <p>You requested a password reset.</p>
-        <p>Click below to reset your password:</p>
-        <a href="${resetLink}">${resetLink}</a>
-        <p>This link expires in 1 hour.</p>
-      `
+      html: `<a href="${resetLink}">Reset Password</a>`
     });
 
-    console.log(`✅ Email sent to ${toEmail}`);
+    console.log("✅ Email sent successfully");
   } catch (err) {
-    console.error('❌ SMTP email error:', err);
+    console.error("❌ SMTP email error:", err);
   }
 }
 // ---------------- RESET PASSWORD ----------------
