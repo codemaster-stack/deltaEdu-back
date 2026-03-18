@@ -9,10 +9,10 @@ const bcrypt = require('bcryptjs');
 const axios = require('axios');
 const qs = require('qs');
 
-const Teacher = require('../models/Teacher');
-const Admission = require('../models/Admission');
-const School = require('../models/School');
-const News = require('../models/News');
+// const Teacher = require('../models/Teacher');
+// const Admission = require('../models/Admission');
+// const School = require('../models/School');
+// const News = require('../models/News');
 
 
 
