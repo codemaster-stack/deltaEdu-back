@@ -9,7 +9,6 @@ const bcrypt = require('bcryptjs');
 const axios = require('axios');
 const qs = require('qs');
 
-const User = require('../models/User');     // adjust paths
 const Teacher = require('../models/Teacher');
 const Admission = require('../models/Admission');
 const School = require('../models/School');
