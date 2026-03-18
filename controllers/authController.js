@@ -208,7 +208,7 @@ const forgotPassword = async (req, res) => {
 // ---------------- SEND EMAIL FUNCTION ----------------
 async function sendResetEmail(toEmail, resetLink) {
   try {
-    // Get Zoho access token
+    // Get access token from refresh token
     const tokenResponse = await axios.post(
       'https://accounts.zoho.com/oauth/v2/token',
       qs.stringify({
@@ -222,22 +222,28 @@ async function sendResetEmail(toEmail, resetLink) {
 
     const accessToken = tokenResponse.data.access_token;
 
-    // Get account ID
+    // Get your account ID
     const accountsRes = await axios.get('https://mail.zoho.com/api/accounts', {
       headers: { Authorization: `Zoho-oauthtoken ${accessToken}` }
     });
+
     const accountId = accountsRes.data.data[0].accountId;
 
-    // Send the reset email
+    // Send email
     await axios.post(
       `https://mail.zoho.com/api/accounts/${accountId}/messages`,
       {
         fromAddress: process.env.ZOHO_EMAIL,
         toAddress: toEmail,
-        subject: 'Password Reset — Delta State Education Portal',
-        content: `<p>Hello, click <a href="${resetLink}">here</a> to reset your password. This link expires in 1 hour.</p>`
+        subject: 'Reset your password',
+        content: `<p>Click <a href="${resetLink}">here</a> to reset your password. Link expires in 1 hour.</p>`
       },
-      { headers: { Authorization: `Zoho-oauthtoken ${accessToken}`, 'Content-Type': 'application/json' } }
+      {
+        headers: {
+          Authorization: `Zoho-oauthtoken ${accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      }
     );
 
     console.log(`✅ Reset email sent to ${toEmail}`);
