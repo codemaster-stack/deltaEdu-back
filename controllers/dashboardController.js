@@ -30,6 +30,15 @@ const getOverview = async (req, res, next) => {
       { label: 'Primary Schools',   value: primaryCount,   colour: '#C9922A' },
       { label: 'Secondary Schools', value: secondaryCount, colour: '#1A6B4A' },
     ];
+     
+           // Bar chart — enrolment by LGA
+    const lgaData = await School.aggregate([
+      { $group: { _id: '$lga', students: { $sum: '$students' } } },
+      { $sort: { students: -1 } },
+      { $limit: 8 },
+    ]);
+
+    const barChart = lgaData.map(l => ({ lga: l._id, students: l.students }));
 
     // Activity feed from recent news
     const activity = recentNews.map(n => ({
@@ -39,7 +48,7 @@ const getOverview = async (req, res, next) => {
       time:   timeAgo(n.createdAt),
     }));
 
-    res.json({ kpis, donut, activity });
+    res.json({ kpis, donut, barChart, activity });
 
   } catch (err) {
     next(err);
