@@ -1,4 +1,8 @@
 const express = require('express');
 const router  = express.Router();
-router.get('/health', (req, res) => res.json({ status: 'ok' }));
+const { getOverview } = require('../controllers/dashboardController');
+const { protect } = require('../middleware/auth');
+
+router.get('/overview', protect, getOverview);
+
 module.exports = router;

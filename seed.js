@@ -36,6 +36,48 @@ const NEWS = [
   { title: 'Renovation Works Begin in 18 Secondary Schools Across Delta North', excerpt: 'Contractors have mobilised to sites across 18 secondary schools in the Delta North senatorial district.',                              category: 'Infrastructure', icon: '🏗️', colour: 'grey',  featured: false },
 ];
 
+const TEACHERS = [
+  { name: 'Mrs. Adaeze Okonkwo',    gender: 'female', subject: 'Mathematics',        school: 'Government Secondary School, Asaba',    lga: 'Oshimili South', level: 'secondary', status: 'active',      years: 12, phone: '08031234567' },
+  { name: 'Mr. Emmanuel Ufuoma',    gender: 'male',   subject: 'Physics',             school: 'Delta State Science Secondary School',  lga: 'Ethiope East',   level: 'secondary', status: 'active',      years: 8,  phone: '08051234567' },
+  { name: 'Mrs. Blessing Efiewi',   gender: 'female', subject: 'English Language',    school: 'Community Primary School, Warri',       lga: 'Warri South',    level: 'primary',   status: 'active',      years: 15, phone: '08071234567' },
+  { name: 'Mr. Chukwuemeka Nwosu',  gender: 'male',   subject: 'Chemistry',           school: 'Girls Secondary School, Agbor',         lga: 'Ika South',      level: 'secondary', status: 'on-leave',    years: 6,  phone: '08091234567' },
+  { name: 'Mrs. Grace Ibe',         gender: 'female', subject: 'Social Studies',      school: 'Nsukwa Primary School, Kwale',          lga: 'Ndokwa West',    level: 'primary',   status: 'active',      years: 10, phone: '08011234567' },
+  { name: 'Mr. David Salami',       gender: 'male',   subject: 'ICT',                 school: 'Technical College, Sapele',             lga: 'Sapele',         level: 'secondary', status: 'active',      years: 4,  phone: '08061234567' },
+  { name: 'Mrs. Obiageli Ufuoma',   gender: 'female', subject: 'Biology',             school: 'Ughelli Model Primary School',          lga: 'Ughelli North',  level: 'primary',   status: 'active',      years: 9,  phone: '08021234567' },
+  { name: 'Mr. Benjamin Ijale',     gender: 'male',   subject: 'Government',          school: 'Unity Secondary School, Ozoro',         lga: 'Isoko North',    level: 'secondary', status: 'active',      years: 11, phone: '08041234567' },
+  { name: 'Mrs. Chidinma Anigbo',   gender: 'female', subject: 'Economics',           school: 'Government Comprehensive School, Agbor',lga: 'Ika South',      level: 'secondary', status: 'transferred', years: 7,  phone: '08081234567' },
+  { name: 'Mr. Festus Enenmo',      gender: 'male',   subject: 'Agricultural Science',school: 'Central Primary School, Abraka',        lga: 'Ethiope East',   level: 'primary',   status: 'active',      years: 13, phone: '08031239999' },
+  { name: 'Mrs. Patricia Amadi',    gender: 'female', subject: 'Literature',          school: "St. Patrick's Secondary School, Asaba", lga: 'Oshimili South', level: 'secondary', status: 'active',      years: 5,  phone: '08051239999' },
+  { name: 'Mr. Sunday Okoro',       gender: 'male',   subject: 'Physical Education',  school: 'Girls Secondary School, Agbor',         lga: 'Ika South',      level: 'secondary', status: 'retired',     years: 35, phone: '08071239999' },
+];
+
+const STUDENTS = [
+  { studentId: 'DSS/2024/001001', name: 'Chioma Okafor',   gender: 'female', dob: '2008-03-15', class: 'SSS 2', level: 'secondary', school: 'Government Secondary School, Asaba',    lga: 'Oshimili South', guardian: 'Mr. Okafor',   phone: '08031234001', status: 'active'     },
+  { studentId: 'DSS/2024/001002', name: 'Emeka Eze',        gender: 'male',   dob: '2009-07-22', class: 'SSS 1', level: 'secondary', school: 'Government Secondary School, Asaba',    lga: 'Oshimili South', guardian: 'Mrs. Eze',     phone: '08031234002', status: 'active'     },
+  { studentId: 'DSS/2024/001003', name: 'Ngozi Obi',        gender: 'female', dob: '2010-01-10', class: 'JSS 3', level: 'secondary', school: 'Girls Secondary School, Agbor',         lga: 'Ika South',      guardian: 'Mr. Obi',      phone: '08031234003', status: 'active'     },
+  { studentId: 'DSS/2024/001004', name: 'Tunde Adeyemi',    gender: 'male',   dob: '2007-11-05', class: 'SSS 3', level: 'secondary', school: 'Delta State Science Secondary School',  lga: 'Ethiope East',   guardian: 'Mrs. Adeyemi', phone: '08031234004', status: 'active'     },
+  { studentId: 'DSS/2024/001005', name: 'Amaka Nwosu',      gender: 'female', dob: '2011-06-18', class: 'JSS 1', level: 'secondary', school: 'Unity Secondary School, Ozoro',         lga: 'Isoko North',    guardian: 'Mr. Nwosu',    phone: '08031234005', status: 'active'     },
+  { studentId: 'DSS/2024/001006', name: 'Samuel Oghene',    gender: 'male',   dob: '2012-09-30', class: 'Primary 5', level: 'primary', school: 'Community Primary School, Warri',    lga: 'Warri South',    guardian: 'Mrs. Oghene',  phone: '08031234006', status: 'active'     },
+  { studentId: 'DSS/2024/001007', name: 'Amara Nwosu',      gender: 'female', dob: '2008-04-12', class: 'SSS 2', level: 'secondary', school: 'Girls Secondary School, Agbor',         lga: 'Ika South',      guardian: 'Mr. Nwosu',    phone: '08031234007', status: 'active'     },
+  { studentId: 'DSS/2024/001008', name: 'David Efe',         gender: 'male',   dob: '2013-02-28', class: 'Primary 4', level: 'primary', school: 'Central Primary School, Abraka',    lga: 'Ethiope East',   guardian: 'Mrs. Efe',     phone: '08031234008', status: 'active'     },
+  { studentId: 'DSS/2024/001009', name: 'Blessing Okpara',  gender: 'female', dob: '2007-08-14', class: 'SSS 3', level: 'secondary', school: "St. Patrick's Secondary School, Asaba", lga: 'Oshimili South', guardian: 'Mr. Okpara',   phone: '08031234009', status: 'graduated'  },
+  { studentId: 'DSS/2024/001010', name: 'Chidi Eze',         gender: 'male',   dob: '2009-12-03', class: 'SSS 1', level: 'secondary', school: 'Technical College, Sapele',             lga: 'Sapele',         guardian: 'Mrs. Eze',     phone: '08031234010', status: 'active'     },
+  { studentId: 'DSS/2024/001011', name: 'Patience Ijale',   gender: 'female', dob: '2011-05-20', class: 'JSS 2', level: 'secondary', school: 'Unity Secondary School, Ozoro',         lga: 'Isoko North',    guardian: 'Mr. Ijale',    phone: '08031234011', status: 'withdrawn'  },
+  { studentId: 'DSS/2024/001012', name: 'Victor Salami',    gender: 'male',   dob: '2010-10-08', class: 'JSS 3', level: 'secondary', school: 'Technical College, Sapele',             lga: 'Sapele',         guardian: 'Mrs. Salami',  phone: '08031234012', status: 'transferred'},
+];
+
+const Teacher = require('./models/Teacher');
+    const Student = require('./models/Student');
+
+    await Teacher.deleteMany({});
+    await Student.deleteMany({});
+
+    await Teacher.insertMany(TEACHERS);
+    console.log(`${TEACHERS.length} teachers seeded`);
+
+    await Student.insertMany(STUDENTS);
+    console.log(`${STUDENTS.length} students seeded`);
+
 const ADMIN_USER = {
   name:     'Ministry Admin',
   email:    'admin@deltaedu.gov.ng',
