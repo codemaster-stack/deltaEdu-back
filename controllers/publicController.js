@@ -1,5 +1,7 @@
 const School = require('../models/School');
 const News   = require('../models/News');
+const Teacher = require('../models/Teacher');
+const Student = require('../models/Student');
 
 // GET /api/v1/public/schools
 const getSchools = async (req, res, next) => {
@@ -81,4 +83,20 @@ const contactForm = async (req, res, next) => {
   }
 };
 
-module.exports = { getSchools, getSchool, getNews, getNewsItem, contactForm };
+// GET /api/v1/public/stats
+const getStats = async (req, res, next) => {
+  try {
+    const [schools, teachers, students] = await Promise.all([
+      School.countDocuments({ status: 'active' }),
+      Teacher.countDocuments({ status: 'active' }),
+      Student.countDocuments({ status: 'active' }),
+    ]);
+
+    res.json({ schools, teachers, students, lgas: 25 });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+module.exports = { getSchools, getSchool, getNews, getNewsItem, contactForm, getStats };
