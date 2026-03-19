@@ -10,6 +10,7 @@ const School  = require('./models/School');
 const News    = require('./models/News');
 const Teacher = require('./models/Teacher');
 const Student = require('./models/Student');
+const Result = require('./models/Result');
 
 const SCHOOLS = [
   { name: 'Government Secondary School, Asaba',      type: 'secondary', lga: 'Oshimili South',  students: 1240, teachers: 48, principal: 'Mr. C. Okonkwo',  phone: '08031234567', status: 'active'   },
@@ -67,6 +68,52 @@ const STUDENTS = [
   { studentId: 'DSS/2024/001012', name: 'Victor Salami',   gender: 'male',   dob: '2010-10-08', class: 'JSS 3',      level: 'secondary', school: 'Technical College, Sapele',              lga: 'Sapele',         guardian: 'Mrs. Salami',  phone: '08031234012', status: 'transferred' },
 ];
 
+const RESULTS = [
+  {
+    studentId: 'DSS/2024/001001',
+    name:      'Chioma Okafor',
+    class:     'SSS 2',
+    school:    'Government Secondary School, Asaba',
+    session:   '2024/2025',
+    term:      'Third Term',
+    exam:      'terminal-3-2024',
+    pin:       'DELTA001',
+    position:  3,
+    total:     45,
+    remark:    'Chioma has shown excellent dedication this term. Her performance in the sciences is particularly commendable.',
+    subjects: [
+      { name: 'Mathematics',      ca: 28, exam: 60, total: 88 },
+      { name: 'English Language', ca: 24, exam: 50, total: 74 },
+      { name: 'Physics',          ca: 30, exam: 61, total: 91 },
+      { name: 'Chemistry',        ca: 26, exam: 53, total: 79 },
+      { name: 'Economics',        ca: 27, exam: 56, total: 83 },
+      { name: 'Government',       ca: 22, exam: 48, total: 70 },
+      { name: 'Literature',       ca: 25, exam: 47, total: 72 },
+    ],
+  },
+  {
+    studentId: 'DSS/2024/001004',
+    name:      'Tunde Adeyemi',
+    class:     'SSS 3',
+    school:    'Delta State Science Secondary School',
+    session:   '2024/2025',
+    term:      'Third Term',
+    exam:      'terminal-3-2024',
+    pin:       'DELTA004',
+    position:  1,
+    total:     38,
+    remark:    'Tunde is an exceptional student who leads his class with distinction.',
+    subjects: [
+      { name: 'Mathematics',        ca: 30, exam: 65, total: 95 },
+      { name: 'English Language',   ca: 26, exam: 56, total: 82 },
+      { name: 'Physics',            ca: 29, exam: 61, total: 90 },
+      { name: 'Chemistry',          ca: 28, exam: 60, total: 88 },
+      { name: 'Biology',            ca: 27, exam: 51, total: 78 },
+      { name: 'Further Mathematics',ca: 30, exam: 62, total: 92 },
+    ],
+  },
+];
+
 const ADMIN_USER = {
   name:     'Ministry Admin',
   email:    'admin@deltaedu.gov.ng',
@@ -84,6 +131,7 @@ async function seed() {
     await News.deleteMany({});
     await Teacher.deleteMany({});
     await Student.deleteMany({});
+    await Result.deleteMany({});
     console.log('Cleared existing data');
 
     // Admin user
@@ -107,6 +155,9 @@ async function seed() {
 
     await Student.insertMany(STUDENTS);
     console.log(`${STUDENTS.length} students seeded`);
+
+    await Result.insertMany(RESULTS);
+    console.log(`${RESULTS.length} results seeded`);
 
     console.log('✅ Seed complete');
     process.exit(0);
