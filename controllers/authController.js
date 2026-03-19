@@ -1,7 +1,7 @@
 const jwt  = require('jsonwebtoken');
 const User = require('../models/User');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
@@ -113,38 +113,28 @@ const forgotPassword = async (req, res, next) => {
     const resetUrl = `${process.env.CLIENT_URL}pages/reset-password/reset-password.html?token=${resetToken}`;
 
     // Send email
-   const transporter = nodemailer.createTransport({
-  host: 'smtp.zoho.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-   connectionTimeout: 10000,
-   greetingTimeout: 10000,
-   socketTimeout: 10000,
+  const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+await resend.emails.send({
+  from: 'Delta State MoE <onboarding@resend.dev>',
+  to:   user.email,
+  subject: 'Password Reset — Delta State Education Portal',
+  html: `
+    <div style="font-family:sans-serif;max-width:520px;margin:0 auto">
+      <h2 style="color:#0C1B2E">Reset Your Password</h2>
+      <p>Hello ${user.name},</p>
+      <p>You requested a password reset for your Delta State Education Portal account.</p>
+      <p>Click the button below to reset your password. This link expires in <strong>30 minutes</strong>.</p>
+      <a href="${resetUrl}" style="display:inline-block;margin:20px 0;padding:12px 28px;background:#C9922A;color:#fff;border-radius:8px;text-decoration:none;font-weight:600">
+        Reset Password
+      </a>
+      <p style="color:#999;font-size:13px">If you did not request this, please ignore this email. Your password will not change.</p>
+      <hr style="border:none;border-top:1px solid #eee;margin:20px 0"/>
+      <p style="color:#999;font-size:12px">Delta State Ministry of Education &mdash; Digital Education Portal</p>
+    </div>
+  `,
 });
-    
-    await transporter.sendMail({
-      from: `"Delta State MoE" <${process.env.EMAIL_USER}>`,
-      to:   user.email,
-      subject: 'Password Reset — Delta State Education Portal',
-      html: `
-        <div style="font-family:sans-serif;max-width:520px;margin:0 auto">
-          <h2 style="color:#0C1B2E">Reset Your Password</h2>
-          <p>Hello ${user.name},</p>
-          <p>You requested a password reset for your Delta State Education Portal account.</p>
-          <p>Click the button below to reset your password. This link expires in <strong>30 minutes</strong>.</p>
-          <a href="${resetUrl}" style="display:inline-block;margin:20px 0;padding:12px 28px;background:#C9922A;color:#fff;border-radius:8px;text-decoration:none;font-weight:600">
-            Reset Password
-          </a>
-          <p style="color:#999;font-size:13px">If you did not request this, please ignore this email. Your password will not change.</p>
-          <hr style="border:none;border-top:1px solid #eee;margin:20px 0"/>
-          <p style="color:#999;font-size:12px">Delta State Ministry of Education &mdash; Digital Education Portal</p>
-        </div>
-      `,
-    });
 
     res.json({ message: 'If this email exists, a reset link has been sent.' });
 
