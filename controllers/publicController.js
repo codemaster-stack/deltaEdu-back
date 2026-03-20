@@ -75,8 +75,29 @@ const contactForm = async (req, res, next) => {
       return res.status(400).json({ message: 'Name, email and message are required.' });
     }
 
-    // TODO: send email notification when email service is configured
-    // For now just return success
+    const { Resend } = require('resend');
+    const resend     = new Resend(process.env.RESEND_API_KEY);
+
+    await resend.emails.send({
+      from:    'Delta State MoE Contact <onboarding@resend.dev>',
+      to:      process.env.EMAIL_USER || 'admin@deltaedu.gov.ng',
+      replyTo: email,
+      subject: `Contact Form: ${subject || 'New Message'} — from ${name}`,
+      html: `
+        <div style="font-family:sans-serif;max-width:520px;margin:0 auto">
+          <h2 style="color:#0C1B2E">New Contact Form Submission</h2>
+          <table style="width:100%;border-collapse:collapse">
+            <tr><td style="padding:8px;font-weight:600;color:#6B8FAF;width:100px">Name</td><td style="padding:8px">${name}</td></tr>
+            <tr><td style="padding:8px;font-weight:600;color:#6B8FAF">Email</td><td style="padding:8px"><a href="mailto:${email}">${email}</a></td></tr>
+            <tr><td style="padding:8px;font-weight:600;color:#6B8FAF">Subject</td><td style="padding:8px">${subject || '—'}</td></tr>
+            <tr><td style="padding:8px;font-weight:600;color:#6B8FAF;vertical-align:top">Message</td><td style="padding:8px">${message.replace(/\n/g, '<br>')}</td></tr>
+          </table>
+          <hr style="border:none;border-top:1px solid #eee;margin:20px 0"/>
+          <p style="color:#999;font-size:12px">Delta State Ministry of Education — Contact Form</p>
+        </div>
+      `,
+    });
+
     res.json({ message: 'Your message has been received. We will get back to you shortly.' });
   } catch (err) {
     next(err);
