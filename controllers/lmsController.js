@@ -88,6 +88,7 @@ const deleteCourse = async (req, res, next) => {
 const addModule = async (req, res, next) => {
   try {
     const { title, lessons } = req.body;
+    console.log('addModule called with id:', req.params.id);
 
     if (!title) {
       return res.status(400).json({ message: 'Module title is required.' });
