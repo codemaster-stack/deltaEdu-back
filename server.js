@@ -31,6 +31,7 @@ app.use('/api/v1/admissions', require('./routes/admissions'));
 app.use('/api/v1/results',    require('./routes/results'));
 app.use('/api/v1/cbt', require('./routes/cbt'));
 app.use('/api/v1/lms', require('./routes/lms'));
+app.use('/api/v1/upload', require('./routes/upload'));
 
 // Health check
 app.get('/api/v1/health', (req, res) => {
