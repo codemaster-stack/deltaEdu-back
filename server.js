@@ -29,6 +29,7 @@ app.use('/api/v1/teachers',   require('./routes/teachers'));
 app.use('/api/v1/students',   require('./routes/students'));
 app.use('/api/v1/admissions', require('./routes/admissions'));
 app.use('/api/v1/results',    require('./routes/results'));
+app.use('/api/v1/cbt', require('./routes/cbt'));
 
 // Health check
 app.get('/api/v1/health', (req, res) => {
