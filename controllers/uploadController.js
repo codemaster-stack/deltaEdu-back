@@ -12,11 +12,13 @@ cloudinary.config({
 // Cloudinary storage for videos
 const videoStorage = new CloudinaryStorage({
   cloudinary,
-  params: {
-    folder:        'delta-edu/lessons',
-    resource_type: 'video',
-    allowed_formats: ['mp4', 'mov', 'avi', 'mkv', 'webm'],
-    transformation: [{ quality: 'auto' }],
+  params: async (req, file) => {
+    return {
+      folder:        'delta-edu/lessons',
+      resource_type: 'video',
+      allowed_formats: ['mp4', 'mov', 'avi', 'mkv', 'webm'],
+      transformation: [{ quality: 'auto' }],
+    };
   },
 });
 
@@ -36,8 +38,10 @@ const uploadVideo = multer({
 // POST /api/v1/upload/video
 const uploadLessonVideo = (req, res, next) => {
   uploadVideo.single('video')(req, res, async (err) => {
+    console.log('Upload attempt - file:', req.file ? req.file.originalname : 'NO FILE');
+    console.log('Upload attempt - err:', err?.message);
     if (err) return res.status(400).json({ message: err.message });
-    if (!req.file) return res.status(400).json({ message: 'Please upload a video file.' });
+    if (!req.file) return res.status(400).json({ message: 'Please upload a video file.' });;
 
     try {
       res.json({
