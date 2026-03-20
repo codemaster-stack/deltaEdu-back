@@ -190,8 +190,6 @@ async function seed() {
     await Student.deleteMany({});
     await Result.deleteMany({});
     await Course.deleteMany({});
-    await Course.insertMany(COURSES);
-    console.log(`${COURSES.length} courses seeded`);
     console.log('Cleared existing data');
 
     // Admin user
@@ -218,6 +216,9 @@ async function seed() {
 
     await Result.insertMany(RESULTS);
     console.log(`${RESULTS.length} results seeded`);
+
+    await Course.insertMany(COURSES);
+    console.log(`${COURSES.length} courses seeded`);
 
     console.log('✅ Seed complete');
     process.exit(0);
