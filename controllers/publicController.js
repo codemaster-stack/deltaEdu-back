@@ -99,4 +99,42 @@ const getStats = async (req, res, next) => {
 };
 
 
-module.exports = { getSchools, getSchool, getNews, getNewsItem, contactForm, getStats };
+// POST /api/v1/public/news — admin creates news (protected)
+const createNews = async (req, res, next) => {
+  try {
+    const { title, excerpt, content, category, audience, icon, colour, featured } = req.body;
+
+    if (!title || !category) {
+      return res.status(400).json({ message: 'Title and category are required.' });
+    }
+
+    const item = await News.create({
+      title,
+      excerpt:  excerpt  || '',
+      content:  content  || '',
+      category,
+      audience: audience || 'all',
+      icon:     icon     || '📢',
+      colour:   colour   || 'gold',
+      featured: featured || false,
+      publishedBy: req.user.id,
+    });
+
+    res.status(201).json({ item });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// DELETE /api/v1/public/news/:id — admin deletes news (protected)
+const deleteNews = async (req, res, next) => {
+  try {
+    const item = await News.findByIdAndDelete(req.params.id);
+    if (!item) return res.status(404).json({ message: 'News item not found.' });
+    res.json({ message: 'News item deleted successfully.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getSchools, getSchool, getNews, getNewsItem, contactForm, getStats, createNews, deleteNews };
