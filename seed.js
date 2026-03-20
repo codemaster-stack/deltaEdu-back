@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const dotenv   = require('dotenv');
+const Course = require('./models/Course');
 
 dotenv.config();
 
@@ -90,6 +91,7 @@ const RESULTS = [
       { name: 'Government',       ca: 22, exam: 48, total: 70 },
       { name: 'Literature',       ca: 25, exam: 47, total: 72 },
     ],
+    
   },
   {
     studentId: 'DSS/2024/001004',
@@ -114,6 +116,61 @@ const RESULTS = [
   },
 ];
 
+  const COURSES = [
+  {
+    title: 'Mathematics — SSS 2', subject: 'Mathematics', class: 'SSS 2',
+    level: 'senior-secondary', levelLabel: 'Senior Secondary',
+    teacher: 'Mrs. Adaeze Okonkwo', desc: 'Algebra, trigonometry, statistics and coordinate geometry for Senior Secondary 2 students.',
+    icon: '📐', colour: '#1B4F8A', duration: '5h 20m', status: 'published',
+    modules: [
+      {
+        title: 'Algebra & Equations',
+        lessons: [
+          { title: 'Introduction to Quadratic Equations', type: 'video',   duration: '35 min', content: 'A quadratic equation is a polynomial equation of degree 2.', keyPoints: ['Standard form: ax² + bx + c = 0', 'Discriminant determines nature of roots'] },
+          { title: 'Factorisation Methods',               type: 'reading', duration: '25 min', content: 'Factorisation is the process of breaking down an expression into its factors.', keyPoints: ['Common factor method', 'Difference of squares', 'Trinomial factorisation'] },
+        ],
+      },
+      {
+        title: 'Trigonometry',
+        lessons: [
+          { title: 'Sine, Cosine and Tangent',            type: 'video',   duration: '40 min', content: 'Trigonometry deals with the relationships between angles and sides of triangles.', keyPoints: ['SOH-CAH-TOA', 'Unit circle', 'Trigonometric identities'] },
+          { title: 'Applications of Trigonometry',        type: 'reading', duration: '30 min', content: 'Trigonometry is used in navigation, architecture and physics.', keyPoints: ['Angle of elevation', 'Angle of depression', 'Bearing problems'] },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'English Language — SSS 1', subject: 'English Language', class: 'SSS 1',
+    level: 'senior-secondary', levelLabel: 'Senior Secondary',
+    teacher: 'Mrs. Blessing Efiewi', desc: 'Comprehension, essay writing, grammar and oral English for Senior Secondary 1 students.',
+    icon: '📖', colour: '#1A6B4A', duration: '4h 10m', status: 'published',
+    modules: [
+      {
+        title: 'Comprehension & Summary',
+        lessons: [
+          { title: 'Reading for Meaning',    type: 'reading', duration: '30 min', content: 'Comprehension involves understanding the meaning of a text.', keyPoints: ['Skimming and scanning', 'Identifying main ideas', 'Inference skills'] },
+          { title: 'Summary Writing Skills', type: 'reading', duration: '25 min', content: 'A summary condenses the main points of a passage.', keyPoints: ['Use your own words', 'Include only key points', 'Maintain original meaning'] },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Basic Science — JSS 2', subject: 'Basic Science', class: 'JSS 2',
+    level: 'junior-secondary', levelLabel: 'Junior Secondary',
+    teacher: 'Dr. E. Nwosu', desc: 'Foundations of science — matter, energy, living things, and scientific investigation.',
+    icon: '🔬', colour: '#C9922A', duration: '3h 00m', status: 'published',
+    modules: [
+      {
+        title: 'Matter and Energy',
+        lessons: [
+          { title: 'States of Matter',  type: 'video',   duration: '35 min', content: 'Matter exists in three states: solid, liquid and gas.', keyPoints: ['Properties of each state', 'Changes of state', 'Kinetic theory'] },
+          { title: 'Forms of Energy',   type: 'reading', duration: '25 min', content: 'Energy exists in many forms including kinetic, potential and thermal energy.', keyPoints: ['Law of conservation of energy', 'Energy transformation', 'Renewable vs non-renewable energy'] },
+        ],
+      },
+    ],
+  },
+];
+
 const ADMIN_USER = {
   name:     'Ministry Admin',
   email:    'admin@deltaedu.gov.ng',
@@ -132,6 +189,9 @@ async function seed() {
     await Teacher.deleteMany({});
     await Student.deleteMany({});
     await Result.deleteMany({});
+    await Course.deleteMany({});
+    await Course.insertMany(COURSES);
+    console.log(`${COURSES.length} courses seeded`);
     console.log('Cleared existing data');
 
     // Admin user

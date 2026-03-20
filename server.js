@@ -30,6 +30,7 @@ app.use('/api/v1/students',   require('./routes/students'));
 app.use('/api/v1/admissions', require('./routes/admissions'));
 app.use('/api/v1/results',    require('./routes/results'));
 app.use('/api/v1/cbt', require('./routes/cbt'));
+app.use('/api/v1/lms', require('./routes/lms'));
 
 // Health check
 app.get('/api/v1/health', (req, res) => {
