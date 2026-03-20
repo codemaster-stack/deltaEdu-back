@@ -79,7 +79,7 @@ const contactForm = async (req, res, next) => {
     const resend     = new Resend(process.env.RESEND_API_KEY);
 
     await resend.emails.send({
-      from:    'Delta State MoE Contact <onboarding@resend.dev>',
+      from: 'Delta State MoE Contact <contact@angeluni-salltd.com>',
       to:      process.env.EMAIL_USER || 'admin@deltaedu.gov.ng',
       replyTo: email,
       subject: `Contact Form: ${subject || 'New Message'} — from ${name}`,

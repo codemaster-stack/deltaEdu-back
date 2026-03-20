@@ -117,7 +117,7 @@ const forgotPassword = async (req, res, next) => {
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 await resend.emails.send({
-  from: 'Delta State MoE <onboarding@resend.dev>',
+  from: 'Delta State MoE <contact@angeluni-salltd.com>',
   to:   user.email,
   subject: 'Password Reset — Delta State Education Portal',
   html: `
