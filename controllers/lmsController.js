@@ -87,7 +87,7 @@ const deleteCourse = async (req, res, next) => {
 // POST /api/v1/lms/courses/:id/modules — add module with lessons (protected)
 const addModule = async (req, res, next) => {
   try {
-    const { title, lessons } = req.body;
+    const { title, lessons, quiz } = req.body;
     console.log('addModule called with id:', req.params.id);
 
     if (!title) {
@@ -97,7 +97,7 @@ const addModule = async (req, res, next) => {
     const course = await Course.findById(req.params.id);
     if (!course) return res.status(404).json({ message: 'Course not found.' });
 
-    course.modules.push({ title, lessons: lessons || [] });
+    course.modules.push({ title, lessons: lessons || [], quiz: quiz || [] });
     await course.save();
 
     res.json({ course });
