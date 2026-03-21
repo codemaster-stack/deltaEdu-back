@@ -106,4 +106,77 @@ const addModule = async (req, res, next) => {
   }
 };
 
-module.exports = { getCourses, getAllCourses, getCourse, createCourse, updateCourse, deleteCourse, addModule };
+// POST /api/v1/lms/courses/:id/lessons/:lessonId/comments
+const addComment = async (req, res, next) => {
+  try {
+    const { user, role, body } = req.body;
+    if (!user || !body) return res.status(400).json({ message: 'Name and comment are required.' });
+
+    const course = await Course.findById(req.params.id);
+    if (!course) return res.status(404).json({ message: 'Course not found.' });
+
+    let lesson;
+    for (const mod of course.modules) {
+      lesson = mod.lessons.id(req.params.lessonId);
+      if (lesson) break;
+    }
+    if (!lesson) return res.status(404).json({ message: 'Lesson not found.' });
+
+    lesson.comments.push({ user, role: role || 'student', body });
+    await course.save();
+
+    const comment = lesson.comments[lesson.comments.length - 1];
+    res.status(201).json({ comment });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// POST /api/v1/lms/courses/:id/lessons/:lessonId/comments/:commentId/reply
+const replyComment = async (req, res, next) => {
+  try {
+    const { user, role, body } = req.body;
+    if (!user || !body) return res.status(400).json({ message: 'Name and reply are required.' });
+
+    const course = await Course.findById(req.params.id);
+    if (!course) return res.status(404).json({ message: 'Course not found.' });
+
+    let lesson;
+    for (const mod of course.modules) {
+      lesson = mod.lessons.id(req.params.lessonId);
+      if (lesson) break;
+    }
+    if (!lesson) return res.status(404).json({ message: 'Lesson not found.' });
+
+    const comment = lesson.comments.id(req.params.commentId);
+    if (!comment) return res.status(404).json({ message: 'Comment not found.' });
+
+    comment.replies.push({ user, role: role || 'staff', body });
+    await course.save();
+
+    res.status(201).json({ comment });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// GET /api/v1/lms/courses/:id/lessons/:lessonId/comments
+const getComments = async (req, res, next) => {
+  try {
+    const course = await Course.findById(req.params.id);
+    if (!course) return res.status(404).json({ message: 'Course not found.' });
+
+    let lesson;
+    for (const mod of course.modules) {
+      lesson = mod.lessons.id(req.params.lessonId);
+      if (lesson) break;
+    }
+    if (!lesson) return res.status(404).json({ message: 'Lesson not found.' });
+
+    res.json({ comments: lesson.comments });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getCourses, getAllCourses, getCourse, createCourse, updateCourse, deleteCourse, addModule, addComment, replyComment, getComments };

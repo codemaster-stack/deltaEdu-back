@@ -1,5 +1,17 @@
 const mongoose = require('mongoose');
 
+const commentSchema = new mongoose.Schema({
+  user:    { type: String, required: true, trim: true }, // display name
+  role:    { type: String, default: 'student' },
+  body:    { type: String, required: true, trim: true },
+  replies: [{
+    user: { type: String, trim: true },
+    role: { type: String, default: 'staff' },
+    body: { type: String, trim: true },
+    createdAt: { type: Date, default: Date.now },
+  }],
+}, { timestamps: true });
+
 const lessonSchema = new mongoose.Schema({
   title:    { type: String, required: true, trim: true },
   type:     { type: String, enum: ['video', 'reading'], default: 'reading' },
@@ -8,6 +20,7 @@ const lessonSchema = new mongoose.Schema({
   videoUrl: { type: String, trim: true },
   keyPoints:   [{ type: String }],
   assignment:  { type: String, trim: true },
+  comments:    [commentSchema],
 }, { _id: true });
 
 const quizQuestionSchema = new mongoose.Schema({
