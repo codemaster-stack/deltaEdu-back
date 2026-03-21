@@ -46,9 +46,14 @@ const studentSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  phone: {
+ phone: {
     type: String,
     trim: true,
+  },
+  guardianEmail: {
+    type: String,
+    trim: true,
+    lowercase: true,
   },
   status: {
     type: String,
