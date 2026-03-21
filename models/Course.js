@@ -10,9 +10,16 @@ const lessonSchema = new mongoose.Schema({
   assignment:  { type: String, trim: true },
 }, { _id: true });
 
+const quizQuestionSchema = new mongoose.Schema({
+  text:    { type: String, required: true, trim: true },
+  options: [{ type: String, trim: true }],
+  answer:  { type: Number, required: true },
+}, { _id: true });
+
 const moduleSchema = new mongoose.Schema({
   title:   { type: String, required: true, trim: true },
   lessons: [lessonSchema],
+  quiz:    [quizQuestionSchema],
 }, { _id: true });
 
 const courseSchema = new mongoose.Schema({
