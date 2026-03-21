@@ -20,6 +20,11 @@ const messageSchema = new mongoose.Schema({
     required: true,
     trim:    true,
   },
+  externalFrom: {
+    type: String,
+    trim: true,
+    default: null,
+  },
   audience: {
     type: String,
     enum: ['individual', 'all', 'teachers', 'students', 'principals'],

@@ -9,5 +9,6 @@ router.get('/users',       protect, getUsers);
 router.post('/',           protect, sendMessage);
 router.patch('/:id/read',  protect, markRead);
 router.delete('/:id',      protect, deleteMessage);
+router.post('/inbound', receiveInbound);
 
 module.exports = router;
