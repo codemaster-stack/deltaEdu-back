@@ -1,11 +1,8 @@
 const express = require('express');
 const router  = express.Router();
-const {
-  getCourses, getAllCourses, getCourse,
-  createCourse, updateCourse, deleteCourse, addModule,
-} = require('../controllers/lmsController');
-const { protect, authorize } = require('../middleware/auth');
 const { getCourses, getAllCourses, getCourse, createCourse, updateCourse, deleteCourse, addModule, addComment, replyComment, getComments } = require('../controllers/lmsController');
+const { protect, authorize } = require('../middleware/auth');
+
 
 router.get('/courses',         getCourses);
 router.get('/courses/all',     protect, authorize('ministry_admin', 'staff'), getAllCourses);
