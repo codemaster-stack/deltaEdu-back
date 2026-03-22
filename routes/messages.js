@@ -1,6 +1,6 @@
 const express = require('express');
 const router  = express.Router();
-const { getInbox, getSent, sendMessage, markRead, deleteMessage, getUsers } = require('../controllers/messageController');
+const { getInbox, getSent, sendMessage, markRead, deleteMessage, getUsers, receiveInbound } = require('../controllers/messageController');
 const { protect } = require('../middleware/auth');
 
 router.get('/inbox',       protect, getInbox);
